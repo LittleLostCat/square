@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>俄罗斯</title>
+</head>
+<style>
+	body{
+		background: black;
+		color: white;
+	}
+	.container{
+		width: 502px;
+	}
+	#canvas{
+		border:1px solid lightBlue;
+	}
+	.coreArea{
+		margin: 0 auto;
+		width: 300px;
+		font-size: 30px;
+		font-weight: 600;
+	}
+</style>
+<body>
+	<div class="container">
+		<div class="coreArea">
+			<span>分数：</span>
+			<span id="core"></span>
+		</div>
+		<div class="buttons">
+			<button id="pause" onclick = 'pause()'>暂停</button>
+			<button id="play" onclick = 'play()'>继续</button>
+			<button id="reload" onclick = 'window.location.reload()'>重新开始</button>
+		</div>
+		<canvas id='canvas' width='400' height='400'></canvas>
+	</div>
+</body>
+</html>
+<script type='text/javascript'>
+	var timer,intn = 160;
+	var param = {
+		//当前的记录
+		nowFigure:[
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+		],
+		//下一个形状
+		nextFigure:{
+			"0":[
+					[
+						[2,2,0,0],
+						[0,2,2,0],
+						[0,0,0,0],
+						[0,0,0,0],
+					],
+					[
+						[0,2,0,0],
+						[2,2,0,0],
+						[2,0,0,0],
+						[0,0,0,0],
+					],
+			],
+			"1":[
+					[
+						[2,2,0,0],
+						[2,2,0,0],
+						[0,0,0,0],
+						[0,0,0,0],
+					],
+			],
+			"2":[
+					[
+						[2,0,0,0],
+						[2,0,0,0],
+						[2,2,0,0],
+						[0,0,0,0],
+					],
+					[
+						[0,0,2,0],
+						[2,2,2,0],
+						[0,0,0,0],
+						[0,0,0,0],
+					],
+					[
+						[2,2,0,0],
+						[0,2,0,0],
+						[0,2,0,0],
+						[0,0,0,0],
+					],
+					[
+						[2,2,2,0],
+						[2,0,0,0],
+						[0,0,0,0],
+						[0,0,0,0],
+					],
+			],
+			"3":[
+					[
+						[0,2,0,0],
+						[0,2,0,0],
+						[2,2,0,0],
+						[0,0,0,0],
+					],
+					[
+						[2,2,2,0],
+						[0,0,2,0],
+						[0,0,0,0],
+						[0,0,0,0],
+					],
+					[
+						[0,2,2,0],
+						[0,2,0,0],
+						[0,2,0,0],
+						[0,0,0,0],
+					],
+					[
+						[2,0,0,0],
+						[2,2,2,0],
+						[0,0,0,0],
+						[0,0,0,0],
+					],
+			],
+			"4":[
+					[
+						[0,2,0,0],
+						[0,2,0,0],
+						[0,2,0,0],
+						[0,2,0,0],
+					],
+					[
+						[2,2,2,2],
+						[0,0,0,0],
+						[0,0,0,0],
+						[0,0,0,0],
+					],
+			],
+			"5":[
+					[
+						[0,2,0,0],
+						[2,2,2,0],
+						[0,0,0,0],
+						[0,0,0,0],
+					],
+					[
+						[0,2,0,0],
+						[2,2,0,0],
+						[0,2,0,0],
+						[0,0,0,0],
+					],
+					[
+						[2,2,2,0],
+						[0,2,0,0],
+						[0,0,0,0],
+						[0,0,0,0],
+					],
+					[
+						[0,2,0,0],
+						[0,2,2,0],
+						[0,2,0,0],
+						[0,0,0,0],
+					],
+			],
+			"6":[
+					[
+						[0,2,2,0],
+						[2,2,0,0],
+						[0,0,0,0],
+						[0,0,0,0],
+					],
+					[
+						[2,0,0,0],
+						[2,2,0,0],
+						[0,2,0,0],
+						[0,0,0,0],
+					],
+			],
+		},
+		//当前移动块的形状
+		nowMove:{"index":0,"order":0},//order表示第几种形状，index为该形状的哪一个形态
+		//下个移动块的形状
+		nextMove:{"index":0,"order":0},//order表示第几种形状，index为该形状的哪一个形态
+		//当前移动块的位置
+		nowLocation:{"x":5,"y":-1},
+		diffcult:5,
+		scan:0,
+		score:0,
+	}
+	document.onkeydown = function(e){
+		switch(e.keyCode){
+			case 37:horizontal(false);break;
+			case 38:rotate();break;
+			case 39:horizontal(true);break;
+			case 40:param.scan += 4;break;
+			default:;break;
+		}
+	}
+	function drawNow(c){
+		let arr = param.nowFigure;
+		c.fillStyle='#66FF66';
+		for(let y = 0;y<20;y++){
+			for(let x=0;x<10;x++){
+				if(arr[y][x]==1){
+					c.fillRect(x*20,y*20,20,20);
+				}
+			}
+		}
+	}
+	function drawNext(c){
+		let x = param.nextMove["order"];
+		let y = param.nextMove["index"];
+		let arr = param.nextFigure[x][y];
+		c.clearRect(250,60,80,80)
+		c.fillStyle='#66FF66';
+		for(let y = 0;y<4;y++){
+			for(let x=0;x<4;x++){
+				if(arr[y][x]==2){
+					c.fillRect(250+x*20,60+y*20,20,20);
+				}
+			}
+		}
+	}
+	function moveDraw(c){
+		let x = param.nowMove["order"];
+		let y = param.nowMove["index"];
+		let arr = param.nextFigure[x][y];
+		let nowLocation = param.nowLocation;
+		let scan = param.scan;
+		let diffcult = param.diffcult;
+		c.fillStyle='#66FF66';
+		param.scan++;
+		if(scan >= diffcult){
+			if(!judgeLineDown()){
+				nowAdd();
+			}else{
+				nowLocation["y"]+=1;
+				param.scan = 0;
+			}
+		}
+		c.clearRect(0,0,200,400)
+		for(let y = 0;y<4;y++){
+			for(let x=0;x<4;x++){
+				if(arr[y][x]==2){
+					c.fillRect(nowLocation["x"]*20+x*20,nowLocation["y"]*20+y*20,20,20);
+				}
+			}
+		}
+	}
+	function move(c){
+		timer = setTimeout(function(){
+			moveDraw(c);
+			drawNow(c);
+			drawNext(c);
+			timer = timer==-1?timer:setTimeout(arguments.callee,100);
+		},100) 
+	}
+	function judgeLineDown(){
+		let x = param.nowMove["order"];
+		let y = param.nowMove["index"];
+		let nowFigure = param.nowFigure;
+		let nextFigure = param.nextFigure[x][y];
+		let loc = param.nowLocation;
+		let bottom = [];
+		for(let i = 0;i<4;i++){
+			for(let j=0;j<4;j++){
+				if(nextFigure[j][i]==2&&((j+1==4)||nextFigure[j+1][i]==0)){
+					bottom.push({"x":i+loc["x"],"y":j+loc["y"]+1})//此处y+1是由于-1开始
+				}
+			}
+		}
+		let result = bottom.every((v)=>{
+			if(v["y"]==20){
+				return false;
+			}else{
+				return nowFigure[v["y"]][v["x"]] == 0
+			}
+		})
+		return result;
+	}
+	function judgeLineSide(direction){
+		let x = param.nowMove["order"];
+		let y = param.nowMove["index"];
+		let nowFigure = param.nowFigure;
+		let nextFigure = param.nextFigure[x][y];
+		let loc = param.nowLocation;
+		let side = [];
+		if(direction){
+			for(let i = 3;i>=0;i--){
+				for(let j=3;j>=0;j--){
+					if(nextFigure[i][j]==2&&((j==3)||nextFigure[i][j+1]==0)){
+						side.push({"x":j+loc["x"],"y":i+loc["y"]})
+					}
+				}
+			}
+		}else{
+			for(let i = 0;i<4;i++){
+				for(let j=0;j<4;j++){
+					if(nextFigure[i][j]==2&&((j==0)||nextFigure[i][j+1]==0)){
+						side.push({"x":j+loc["x"],"y":i+loc["y"]})
+					}
+				}
+			}
+		}
+		let result = side.every((v)=>{
+			if((v["x"]==0&&!direction)||(v["x"]==9&&direction)){
+				return false;
+			}else{
+				if(direction){
+					return nowFigure[v["y"]][v["x"]+1] == 0
+				}else{
+					return nowFigure[v["y"]][v["x"]-1] == 0
+				}
+			}
+		})
+		return result;
+	}
+	//旋转
+	function rotate(){
+		let nextFigure = param.nextFigure;
+		let nowShape = param.nowFigure;
+		let nowMove = param.nowMove;
+		let figureNum = nextFigure[nowMove["order"]].length - 1;//此形状有几种形态
+		let nextIndex = nowMove["index"]+1>figureNum?0:nowMove["index"]+1;
+		let loc = param.nowLocation;
+		let x = loc["x"];
+		let y = loc["y"];
+		let nowFigure = nextFigure[nowMove["order"]][nextIndex];
+		let rotateFlag = true;
+		for(let i = 0;i<4;i++){
+			for(let j = 0;j<4;j++){
+				if(nowFigure[i][j]==2&&nowShape[y+i][x+j]==1){
+					return;
+				}
+			}
+		}
+		outloop:
+		for(let i = 3;i>=0;i--){
+			for(let j=0;j<4;j++){
+				if(nowFigure[j][i]==2){//该列有值
+					console.log(x,i);
+					if(x+i>9){
+						rotateFlag = false;
+						break outloop;
+					}else if(x+i<0){
+						rotateFlag = false;
+						break outloop;
+					}
+				}
+			}
+		}
+		if(rotateFlag){
+			nowMove["index"] = nextIndex;
+		}
+	}
+	//平移
+	function horizontal(direction){
+		let nextFigure = param.nextFigure;
+		let nowMove = param.nowMove;
+		let loc = param.nowLocation;
+		let nowFigure = param.nextFigure[nowMove["order"]][nowMove["index"]];
+		let moveFlag = true;
+		if(direction){
+			moveFlag = judgeLineSide(direction)
+			if(moveFlag){
+				loc["x"]+=1;
+			}
+		}else{
+			moveFlag = judgeLineSide(direction)
+			if(moveFlag){
+				loc["x"]-=1;
+			}
+		}
+	}
+	function nowAdd(){
+		let nowFigure = param.nowFigure;
+		let x = param.nowMove["order"];
+		let y = param.nowMove["index"];
+		let moveFigure = param.nextFigure[x][y];
+		let loc = param.nowLocation;
+		let xx = loc["x"];
+		let yy = loc["y"];
+		let score = document.getElementById("core")
+		for(let i = 0;i<4;i++){
+			for(let j=0;j<4;j++){
+				if(moveFigure[i][j]){
+					if((yy+i)<0){
+						document.onkeydown = null;
+						clearTimeout(timer);
+						timer = -1;
+						alert("Game Over");
+						return;
+					}
+					nowFigure[yy+i][xx+j] = 1;
+				}
+			}
+		}
+		for(let i = 0;i<20;i++){
+			if(nowFigure[i].includes(0)){
+				continue;
+			}else{
+				nowFigure.splice(i,1);
+				nowFigure.unshift([0,0,0,0,0,0,0,0,0,0]);
+				param.score++;
+				score.innerHTML = param.score
+				i--;
+			}
+		}
+		nextGet();
+	}
+	function nextGet(){
+		let order = ~~(Math.random()*7);
+		let index = ~~(Math.random()*(param.nextFigure[order].length));
+		console.log(param.nowMove["order"])
+		param.nowMove["order"] = param.nextMove["order"];
+		param.nowMove["index"] = param.nextMove["index"];
+		param.nextMove["order"] = order;
+		param.nextMove["index"] = index;
+		param.nowLocation = {"x":5,"y":-1};
+	}
+	function pause(){
+		clearTimeout(timer);
+		timer == -2;
+	}
+	function play(){
+		if(timer == -2){
+			move(ctx);
+		}
+	}
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext('2d');
+	ctx.strokeStyle='lightBlue';
+	ctx.moveTo(201,0);
+	ctx.lineTo(201,400);
+	ctx.stroke();
+	let order = ~~(Math.random()*7);
+	let index = ~~(Math.random()*(param.nextFigure[order].length));
+	param.nextMove["order"] = order;
+	param.nextMove["index"] = index;
+	nextGet();
+	drawNow(ctx);
+	drawNext(ctx);
+	move(ctx);
+	ctx.font = "20px Arial";
+ 	ctx.fillStyle = "white";
+	ctx.fillText("下个形状",250,20);
+</script>
