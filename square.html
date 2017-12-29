@@ -31,6 +31,7 @@
 		<div class="buttons">
 			<button id="pause" onclick = 'pause()'>暂停</button>
 			<button id="play" onclick = 'play()'>继续</button>
+			<button id="accelerate" onclick = 'accelerate()'>加速</button>
 			<button id="reload" onclick = 'window.location.reload()'>重新开始</button>
 		</div>
 		<canvas id='canvas' width='400' height='400'></canvas>
@@ -200,7 +201,7 @@
 		nextMove:{"index":0,"order":0},//order表示第几种形状，index为该形状的哪一个形态
 		//当前移动块的位置
 		nowLocation:{"x":5,"y":-1},
-		diffcult:5,
+		diffcult:4,
 		scan:0,
 		score:0,
 	}
@@ -265,6 +266,7 @@
 		}
 	}
 	function move(c){
+		console.log(233)
 		timer = setTimeout(function(){
 			moveDraw(c);
 			drawNow(c);
@@ -355,7 +357,6 @@
 		for(let i = 3;i>=0;i--){
 			for(let j=0;j<4;j++){
 				if(nowFigure[j][i]==2){//该列有值
-					console.log(x,i);
 					if(x+i>9){
 						rotateFlag = false;
 						break outloop;
@@ -428,7 +429,6 @@
 	function nextGet(){
 		let order = ~~(Math.random()*7);
 		let index = ~~(Math.random()*(param.nextFigure[order].length));
-		console.log(param.nowMove["order"])
 		param.nowMove["order"] = param.nextMove["order"];
 		param.nowMove["index"] = param.nextMove["index"];
 		param.nextMove["order"] = order;
@@ -437,12 +437,15 @@
 	}
 	function pause(){
 		clearTimeout(timer);
-		timer == -2;
+		timer = -2;
 	}
 	function play(){
 		if(timer == -2){
 			move(ctx);
 		}
+	}
+	function accelerate(){
+		param.diffcult --;
 	}
 	var canvas = document.getElementById("canvas");
 	var ctx = canvas.getContext('2d');
